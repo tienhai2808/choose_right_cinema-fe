@@ -626,3 +626,97 @@ body {
   font-size: 12px;
   margin-bottom: 2px;
 }
+
+
+/* Gemini Recommendation Styles */
+.gemini-recommendation {
+  background-color: #f8f9fa;
+  border-radius: var(--border-radius);
+  border-left: 4px solid var(--accent);
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow);
+  animation: fadeInUp 0.5s ease;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.gemini-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.gemini-header i {
+  color: var(--accent);
+  font-size: 1.4rem;
+}
+
+.gemini-header h3 {
+  color: var(--dark);
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+.gemini-content {
+  color: var(--text);
+  line-height: 1.7;
+  background-color: white;
+  padding: 15px;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--light-gray);
+}
+
+.gemini-content p {
+  margin: 0;
+}
+
+.gemini-content ul {
+  padding: 0px 15px;
+}
+
+/* Add style for highlighted cinema */
+.cinema-card.recommended {
+  border-left: 4px solid var(--accent);
+  border-color: var(--accent);
+}
+
+.recommended-badge {
+  background-color: var(--accent);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  display: inline-block;
+  margin-left: 10px;
+}
+
+/* Enhance the zoom overlay for showtime images */
+.showtime-image-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.zoom-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 8px 12px;
+  color: white;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.showtime-image-container:hover .zoom-overlay {
+  opacity: 1;
+}

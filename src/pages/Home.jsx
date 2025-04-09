@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import Loader from './Loader';
+import ReactMarkDown from "react-markdown";
 
 const Home = () => {
   const [films, setFilms] = useState([]);
@@ -128,98 +129,98 @@ const Home = () => {
       {loadingCinema ? (
         <Loader />
       ) : (
-              <div className="search-container">
-              <form onSubmit={handleSubmit(onSubmit)} className="search-form">
-                <div className="form-group">
-                  <label>
-                    <i className="fas fa-film"></i> Chọn Phim
-                  </label>
-                  <div className="film-select">
-                    <input
-                      type="text"
-                      readOnly
-                      placeholder="Chọn phim"
-                      value={selectedFilm}
-                      onClick={() => setShowModal(true)}
-                      className={errors.filmName ? 'error' : ''}
-                    />
-                    <button type="button" onClick={() => setShowModal(true)} className="select-film-btn">
-                      <i className="fas fa-search"></i>
-                    </button>
-                  </div>
-                  {errors.filmName && <span className="error-message">Vui lòng chọn phim</span>}
-                </div>
-      
-                <div className="form-group">
-                  <label>
-                    <i className="fas fa-calendar-alt"></i> Ngày Xem
-                  </label>
-                  <DatePicker
-                    selected={viewDate}
-                    onChange={(date) => setViewDate(date)}
-                    minDate={new Date()}
-                    maxDate={getMaxDate()}
-                    dateFormat="dd/MM/yyyy"
-                    className="datepicker"
-                  />
-                </div>
-      
-                <div className="form-group location">
-                  <label>
-                    <i className="fas fa-map-marker-alt"></i> Vị Trí Hiện Tại
-                  </label>
-                  <div className="location-display">
-                    {userLocation ? (
-                      <span className="location-found">
-                        <i className="fas fa-check-circle"></i> Đã xác định vị trí
-                      </span>
-                    ) : (
-                      <span className="location-not-found">
-                        <i className="fas fa-exclamation-circle"></i> Chưa có vị trí
-                      </span>
-                    )}
-                    <button type="button" onClick={getUserLocation} className="refresh-location">
-                      <i className="fas fa-sync-alt"></i>
-                    </button>
-                  </div>
-                  {locationError && <span className="error-message">{locationError}</span>}
-                </div>
-      
-                <div className="form-row">
-                  <div className="form-group half">
-                    <label>
-                      <i className="fas fa-ruler"></i> Bán Kính (km)
-                    </label>
-                    <input
-                      type="number"
-                      min="1"
-                      max="50"
-                      {...register('radius', { required: true, min: 1, max: 50 })}
-                      className={errors.radius ? 'error' : ''}
-                    />
-                    {errors.radius && <span className="error-message">Bán kính phải từ 1-50 km</span>}
-                  </div>
-      
-                  <div className="form-group half">
-                    <label>
-                      <i className="fas fa-list-ol"></i> Số Lượng
-                    </label>
-                    <input
-                      type="number"
-                      min="1"
-                      max="3"
-                      {...register('limit', { required: true, min: 1, max: 3 })}
-                      className={errors.limit ? 'error' : ''}
-                    />
-                    {errors.limit && <span className="error-message">Số lượng phải từ 1-3</span>}
-                  </div>
-                </div>
-      
-                <button type="submit" className="submit-btn" disabled={loadingCinema}>
-                  {loadingCinema ? <i className="fas fa-spinner fa-spin"></i> : <i className="fas fa-search"></i>} Tìm Rạp Phim
+        <div className="search-container">
+          <form onSubmit={handleSubmit(onSubmit)} className="search-form">
+            <div className="form-group">
+              <label>
+                <i className="fas fa-film"></i> Chọn Phim
+              </label>
+              <div className="film-select">
+                <input
+                  type="text"
+                  readOnly
+                  placeholder="Chọn phim"
+                  value={selectedFilm}
+                  onClick={() => setShowModal(true)}
+                  className={errors.filmName ? 'error' : ''}
+                />
+                <button type="button" onClick={() => setShowModal(true)} className="select-film-btn">
+                  <i className="fas fa-search"></i>
                 </button>
-              </form>
+              </div>
+              {errors.filmName && <span className="error-message">Vui lòng chọn phim</span>}
             </div>
+
+            <div className="form-group">
+              <label>
+                <i className="fas fa-calendar-alt"></i> Ngày Xem
+              </label>
+              <DatePicker
+                selected={viewDate}
+                onChange={(date) => setViewDate(date)}
+                minDate={new Date()}
+                maxDate={getMaxDate()}
+                dateFormat="dd/MM/yyyy"
+                className="datepicker"
+              />
+            </div>
+
+            <div className="form-group location">
+              <label>
+                <i className="fas fa-map-marker-alt"></i> Vị Trí Hiện Tại
+              </label>
+              <div className="location-display">
+                {userLocation ? (
+                  <span className="location-found">
+                    <i className="fas fa-check-circle"></i> Đã xác định vị trí
+                  </span>
+                ) : (
+                  <span className="location-not-found">
+                    <i className="fas fa-exclamation-circle"></i> Chưa có vị trí
+                  </span>
+                )}
+                <button type="button" onClick={getUserLocation} className="refresh-location">
+                  <i className="fas fa-sync-alt"></i>
+                </button>
+              </div>
+              {locationError && <span className="error-message">{locationError}</span>}
+            </div>
+
+            <div className="form-row">
+              <div className="form-group half">
+                <label>
+                  <i className="fas fa-ruler"></i> Bán Kính (km)
+                </label>
+                <input
+                  type="number"
+                  min="1"
+                  max="50"
+                  {...register('radius', { required: true, min: 1, max: 50 })}
+                  className={errors.radius ? 'error' : ''}
+                />
+                {errors.radius && <span className="error-message">Bán kính phải từ 1-50 km</span>}
+              </div>
+
+              <div className="form-group half">
+                <label>
+                  <i className="fas fa-list-ol"></i> Số Lượng
+                </label>
+                <input
+                  type="number"
+                  min="1"
+                  max="3"
+                  {...register('limit', { required: true, min: 1, max: 3 })}
+                  className={errors.limit ? 'error' : ''}
+                />
+                {errors.limit && <span className="error-message">Số lượng phải từ 1-3</span>}
+              </div>
+            </div>
+
+            <button type="submit" className="submit-btn" disabled={loadingCinema}>
+              {loadingCinema ? <i className="fas fa-spinner fa-spin"></i> : <i className="fas fa-search"></i>} Tìm Rạp Phim
+            </button>
+          </form>
+        </div>
       )}
 
 
@@ -277,6 +278,18 @@ const Home = () => {
             </div>
           ) : (
             <>
+              {searchResults.recommendedCinema && (
+                <div className="gemini-recommendation">
+                  <div className="gemini-header">
+                    <i className="fas fa-robot"></i>
+                    <h3>Gợi ý từ AI</h3>
+                  </div>
+                  <div className="gemini-content">
+                    <ReactMarkDown>{searchResults.recommendedCinema}</ReactMarkDown>
+                  </div>
+                </div>
+              )}
+
               <p className="results-message">{searchResults.message}</p>
               <div className="cinema-grid">
                 {searchResults.data && searchResults.data.map((cinema, index) => (
@@ -304,7 +317,7 @@ const Home = () => {
                           <img src={cinema.imgShowTime} alt="Lịch chiếu" />
                           <div className="zoom-overlay">
                             <i className="fas fa-search-plus"></i>
-                            <span>Xem lịch và giá☝️</span>
+                            <span> Xem lịch và giá☝️</span>
                           </div>
                         </div>
                       </div>
