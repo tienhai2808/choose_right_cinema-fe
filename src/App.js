@@ -7,7 +7,6 @@ const App = () => {
   return (
     <Routes>
       <Route path="" element={<Home />} />
-      <Route path="loader" element={<Loader />} />
     </Routes>
   );
 }
