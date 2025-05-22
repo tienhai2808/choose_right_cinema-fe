@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import './Home.css';
 import { useForm } from 'react-hook-form';
@@ -8,16 +8,24 @@ import Loader from './Loader';
 import ReactMarkDown from "react-markdown";
 
 const Home = () => {
-  const [films, setFilms] = useState([]);
-  const [loadingFilm, setLoadingFilm] = useState(false);
   const [loadingCinema, setLoadingCinema] = useState(false);
-  const [showModal, setShowModal] = useState(false);
   const [selectedFilm, setSelectedFilm] = useState('');
   const [searchResults, setSearchResults] = useState(null);
   const [viewDate, setViewDate] = useState(new Date());
   const [userLocation, setUserLocation] = useState(null);
   const [locationError, setLocationError] = useState('');
   const [enlargedImage, setEnlargedImage] = useState(null);
+  
+  // Live search states
+  const [filmQuery, setFilmQuery] = useState('');
+  const [searchedFilms, setSearchedFilms] = useState([]);
+  const [loadingSearch, setLoadingSearch] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [selectedFilmData, setSelectedFilmData] = useState(null);
+  
+  const searchRef = useRef(null);
+  const debounceRef = useRef(null);
+
   const { register, handleSubmit, setValue, formState: { errors } } = useForm({
     defaultValues: {
       filmName: '',
@@ -27,21 +35,22 @@ const Home = () => {
   });
 
   useEffect(() => {
-    fetchFilms();
     getUserLocation();
   }, []);
 
-  const fetchFilms = async () => {
-    try {
-      setLoadingFilm(true);
-      const response = await axios.get('http://localhost:2808/api/films/all');
-      setFilms(response.data);
-      setLoadingFilm(false);
-    } catch (error) {
-      console.error('Error fetching films:', error);
-      setLoadingFilm(false);
-    }
-  };
+  // Handle clicks outside dropdown
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (searchRef.current && !searchRef.current.contains(event.target)) {
+        setShowDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const getUserLocation = () => {
     if (navigator.geolocation) {
@@ -63,10 +72,50 @@ const Home = () => {
     }
   };
 
+  const searchFilms = async (query) => {
+    if (!query || query.length < 2) {
+      setSearchedFilms([]);
+      setShowDropdown(false);
+      return;
+    }
+
+    try {
+      setLoadingSearch(true);
+      const response = await axios.get(`http://localhost:2808/api/films?s=${encodeURIComponent(query)}`);
+      setSearchedFilms(response.data);
+      setShowDropdown(true);
+      setLoadingSearch(false);
+    } catch (error) {
+      console.error('Error searching films:', error);
+      setSearchedFilms([]);
+      setShowDropdown(false);
+      setLoadingSearch(false);
+    }
+  };
+
+  const handleFilmInputChange = (e) => {
+    const value = e.target.value;
+    setFilmQuery(value);
+    setValue('filmName', value);
+
+    // Clear previous debounce
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current);
+    }
+
+    // Debounce search
+    debounceRef.current = setTimeout(() => {
+      searchFilms(value);
+    }, 300);
+  };
+
   const selectFilm = (film) => {
     setSelectedFilm(film.title);
+    setSelectedFilmData(film);
+    setFilmQuery(film.title);
     setValue('filmName', film.title);
-    setShowModal(false);
+    setShowDropdown(false);
+    setSearchedFilms([]);
   };
 
   const onSubmit = async (data) => {
@@ -133,20 +182,57 @@ const Home = () => {
           <form onSubmit={handleSubmit(onSubmit)} className="search-form">
             <div className="form-group">
               <label>
-                <i className="fas fa-film"></i> Chọn Phim
+                <i className="fas fa-film"></i> Tìm Phim
               </label>
-              <div className="film-select">
+              <div className="film-search" ref={searchRef}>
                 <input
                   type="text"
-                  readOnly
-                  placeholder="Chọn phim"
-                  value={selectedFilm}
-                  onClick={() => setShowModal(true)}
+                  placeholder="Nhập tên phim để tìm kiếm..."
+                  value={filmQuery}
+                  onChange={handleFilmInputChange}
                   className={errors.filmName ? 'error' : ''}
+                  autoComplete="off"
                 />
-                <button type="button" onClick={() => setShowModal(true)} className="select-film-btn">
-                  <i className="fas fa-search"></i>
-                </button>
+                {loadingSearch && (
+                  <div className="search-loading">
+                    <i className="fas fa-spinner fa-spin"></i>
+                  </div>
+                )}
+                
+                {showDropdown && searchedFilms.length > 0 && (
+                  <div className="film-dropdown">
+                    {searchedFilms.map((film) => (
+                      <div 
+                        key={film._id} 
+                        className="film-dropdown-item" 
+                        onClick={() => selectFilm(film)}
+                      >
+                        <div className="film-dropdown-poster">
+                          {film.image ? (
+                            <img src={film.image} alt={film.title} />
+                          ) : (
+                            <div className="no-poster-small">
+                              <i className="fas fa-film"></i>
+                            </div>
+                          )}
+                        </div>
+                        <div className="film-dropdown-info">
+                          <h4>{film.title}</h4>
+                          {film.duration && <p>{film.duration} phút</p>}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                
+                {showDropdown && searchedFilms.length === 0 && !loadingSearch && filmQuery.length >= 2 && (
+                  <div className="film-dropdown">
+                    <div className="no-results-dropdown">
+                      <i className="fas fa-search"></i>
+                      <p>Không tìm thấy phim nào</p>
+                    </div>
+                  </div>
+                )}
               </div>
               {errors.filmName && <span className="error-message">Vui lòng chọn phim</span>}
             </div>
@@ -220,48 +306,6 @@ const Home = () => {
               {loadingCinema ? <i className="fas fa-spinner fa-spin"></i> : <i className="fas fa-search"></i>} Tìm Rạp Phim
             </button>
           </form>
-        </div>
-      )}
-
-
-      {showModal && (
-        <div className="modal">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h2>Chọn Phim</h2>
-              <button onClick={() => setShowModal(false)} className="close-btn">
-                <i className="fas fa-times"></i>
-              </button>
-            </div>
-            <div className="modal-body">
-              {loadingFilm ? (
-                <div className="loading">
-                  <i className="fas fa-spinner fa-spin"></i>
-                  <p>Đang tải danh sách phim...</p>
-                </div>
-              ) : (
-                <div className="film-grid">
-                  {films.map((film) => (
-                    <div key={film._id} className="film-card" onClick={() => selectFilm(film)}>
-                      <div className="film-poster">
-                        {film.image ? (
-                          <img src={film.image} alt={film.title} />
-                        ) : (
-                          <div className="no-poster">
-                            <i className="fas fa-film"></i>
-                          </div>
-                        )}
-                      </div>
-                      <div className="film-info">
-                        <h3>{film.title}</h3>
-                        {film.duration && <p>{film.duration} phút</p>}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
         </div>
       )}
 

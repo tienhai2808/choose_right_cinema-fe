@@ -29,14 +29,12 @@ body {
   background-color: #f8f9fa;
 }
 
-/* Home Container */
 .home-container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 15px;
 }
 
-/* Hero Section */
 .hero-section {
   background: linear-gradient(to right, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.6)), 
               url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?ixlib=rb-4.0.3&auto=format&fit=crop&w=1500&q=80') center/cover no-repeat;
@@ -63,7 +61,6 @@ body {
   opacity: 0.9;
 }
 
-/* Search Container */
 .search-container {
   background-color: white;
   border-radius: var(--border-radius);
@@ -135,42 +132,121 @@ body {
   flex: 1;
 }
 
-/* Film Select */
-.film-select {
+/* Film Search Dropdown */
+.film-search {
   position: relative;
-  display: flex;
 }
 
-.film-select input {
-  flex: 1;
-  cursor: pointer;
-  font-family: "IBM Plex Mono", monospace;
+.film-search input {
+  width: 100%;
+  padding-right: 40px;
 }
 
-.select-film-btn {
+.search-loading {
   position: absolute;
-  right: 1px;
-  top: 1px;
-  bottom: 1px;
-  width: 46px;
-  background-color: var(--light);
-  border: none;
-  border-top-right-radius: var(--border-radius);
-  border-bottom-right-radius: var(--border-radius);
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--primary);
+}
+
+.film-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: white;
+  border: 1px solid var(--light-gray);
+  border-top: none;
+  border-radius: 0 0 var(--border-radius) var(--border-radius);
+  box-shadow: var(--shadow);
+  z-index: 100;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.film-dropdown-item {
+  display: flex;
+  align-items: center;
+  padding: 12px;
   cursor: pointer;
+  transition: var(--transition);
+  border-bottom: 1px solid var(--light-gray);
+}
+
+.film-dropdown-item:hover {
+  background-color: var(--light);
+}
+
+.film-dropdown-item:last-child {
+  border-bottom: none;
+}
+
+.film-dropdown-poster {
+  width: 50px;
+  height: 70px;
+  margin-right: 12px;
+  border-radius: 4px;
+  overflow: hidden;
+  background-color: var(--light);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--primary);
+  flex-shrink: 0;
+}
+
+.film-dropdown-poster img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.no-poster-small {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--secondary);
+  color: white;
+  font-size: 1.2rem;
+}
+
+.film-dropdown-info {
+  flex: 1;
+}
+
+.film-dropdown-info h4 {
   font-size: 1rem;
-  transition: var(--transition);
+  margin-bottom: 4px;
+  font-weight: 500;
 }
 
-.select-film-btn:hover {
-  background-color: var(--light-gray);
+.film-dropdown-info p {
+  color: #666;
+  font-size: 0.85rem;
+  margin: 0;
 }
 
-/* Location Display */
+.no-results-dropdown {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  gap: 8px;
+  color: #666;
+  text-align: center;
+}
+
+.no-results-dropdown i {
+  font-size: 1.5rem;
+}
+
+.no-results-dropdown p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
 .location-display {
   display: flex;
   align-items: center;
@@ -214,7 +290,6 @@ body {
   background-color: rgba(229, 9, 20, 0.1);
 }
 
-/* Submit Button */
 .submit-btn {
   background-color: var(--primary);
   color: white;
@@ -242,142 +317,6 @@ body {
   cursor: not-allowed;
 }
 
-/* Film Selection Modal */
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.6);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  padding: 20px;
-}
-
-.modal-content {
-  background-color: white;
-  border-radius: var(--border-radius);
-  width: 100%;
-  max-width: 800px;
-  max-height: 90vh;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  animation: fadeIn 0.3s ease;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px;
-  border-bottom: 1px solid var(--light-gray);
-}
-
-.modal-header h2 {
-  color: var(--secondary);
-  font-size: 1.5rem;
-}
-
-.close-btn {
-  background: none;
-  border: none;
-  font-size: 1.2rem;
-  cursor: pointer;
-  color: var(--text);
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  transition: var(--transition);
-}
-
-.close-btn:hover {
-  background-color: var(--light-gray);
-}
-
-.modal-body {
-  padding: 20px;
-  overflow-y: auto;
-  max-height: calc(90vh - 70px);
-}
-
-/* Film Grid */
-.film-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 20px;
-}
-
-.film-card {
-  background-color: white;
-  border-radius: var(--border-radius);
-  overflow: hidden;
-  box-shadow: var(--shadow);
-  cursor: pointer;
-  transition: var(--transition);
-  border: 1px solid var(--light-gray);
-}
-
-.film-card:hover {
-  transform: translateY(-5px);
-  box-shadow: var(--shadow-strong);
-}
-
-.film-poster {
-  height: 250px;
-  background-color: var(--light);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-
-.film-poster img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.no-poster {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: var(--secondary);
-  color: white;
-  font-size: 2rem;
-}
-
-.film-info {
-  padding: 15px;
-}
-
-.film-info h3 {
-  font-size: 1rem;
-  margin-bottom: 5px;
-  font-weight: 500;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.film-info p {
-  color: #666;
-  font-size: 0.85rem;
-}
-
 /* Loading */
 .loading {
   display: flex;
@@ -393,7 +332,6 @@ body {
   font-size: 2rem;
 }
 
-/* Results Container */
 .results-container {
   background-color: white;
   border-radius: var(--border-radius);
@@ -401,6 +339,11 @@ body {
   margin: 20px 0;
   box-shadow: var(--shadow);
   animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .results-header {
@@ -433,7 +376,6 @@ body {
   font-size: 3rem;
 }
 
-/* Cinema Grid */
 .cinema-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
@@ -480,8 +422,11 @@ body {
   margin: 15px 0;
 }
 
-.showtime-image-container:hover {
+.showtime-image-container {
+  position: relative;
+  overflow: hidden;
   cursor: pointer;
+  border-radius: var(--border-radius);
 }
 
 .showtime-image h4 {
@@ -494,6 +439,27 @@ body {
   width: 100%;
   border-radius: var(--border-radius);
   border: 1px solid var(--light-gray);
+  transition: var(--transition);
+}
+
+.zoom-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 8px 12px;
+  color: white;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.showtime-image-container:hover .zoom-overlay {
+  opacity: 1;
 }
 
 .view-more {
@@ -509,48 +475,6 @@ body {
 
 .view-more:hover {
   color: var(--primary-light);
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .hero-section {
-    padding: 40px 15px;
-  }
-  
-  .hero-content h1 {
-    font-size: 2rem;
-  }
-  
-  .form-row {
-    flex-direction: column;
-    gap: 20px;
-  }
-  
-  .cinema-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* React Datepicker Customization */
-.react-datepicker-wrapper {
-  width: 100%;
-}
-
-.react-datepicker__input-container input {
-  width: 100%;
-  padding: 12px 15px;
-  border: 1px solid var(--light-gray);
-  border-radius: var(--border-radius);
-  font-size: 1rem;
-  font-family: "IBM Plex Mono", monospace;
-}
-
-.react-datepicker__day--selected {
-  background-color: var(--primary) !important;
-}
-
-.react-datepicker__day--keyboard-selected {
-  background-color: var(--primary-light) !important;
 }
 
 .image-modal {
@@ -607,6 +531,25 @@ body {
   background-color: rgba(255, 255, 255, 0.2);
 }
 
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: var(--text);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: var(--transition);
+}
+
+.close-btn:hover {
+  background-color: var(--light-gray);
+}
+
 .image-modal-body {
   overflow: auto;
   max-height: calc(90vh - 100px);
@@ -625,8 +568,9 @@ body {
   text-align: center;
   font-size: 12px;
   margin-bottom: 2px;
+  padding: 8px;
+  color: #666;
 }
-
 
 /* Gemini Recommendation Styles */
 .gemini-recommendation {
@@ -679,7 +623,6 @@ body {
   padding: 0px 15px;
 }
 
-/* Add style for highlighted cinema */
 .cinema-card.recommended {
   border-left: 4px solid var(--accent);
   border-color: var(--accent);
@@ -695,28 +638,58 @@ body {
   margin-left: 10px;
 }
 
-/* Enhance the zoom overlay for showtime images */
-.showtime-image-container {
+/* React DatePicker Styles */
+.react-datepicker-wrapper {
+  width: 100%;
+}
+
+.react-datepicker__input-container input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid var(--light-gray);
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  font-family: "IBM Plex Mono", monospace;
+}
+
+.react-datepicker__day--selected {
+  background-color: var(--primary) !important;
+}
+
+.react-datepicker__day--keyboard-selected {
+  background-color: var(--primary-light) !important;
+}
+
+/* Location form group specific styles */
+.form-group.location {
   position: relative;
-  overflow: hidden;
 }
 
-.zoom-overlay {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: rgba(0, 0, 0, 0.6);
-  padding: 8px 12px;
-  color: white;
-  font-size: 0.85rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.showtime-image-container:hover .zoom-overlay {
-  opacity: 1;
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .hero-section {
+    padding: 40px 15px;
+  }
+  
+  .hero-content h1 {
+    font-size: 2rem;
+  }
+  
+  .form-row {
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .cinema-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .film-dropdown {
+    max-height: 250px;
+  }
+  
+  .image-modal-content {
+    margin: 10px;
+    max-width: calc(100vw - 20px);
+  }
 }
